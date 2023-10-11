@@ -34,10 +34,12 @@ BASE_NAME=$(basename -- "$INPUT_FILE")
 FILE_NAME="${BASE_NAME%.*}"
 
 echo "$BITRATE is the bit rate"
+# Create output directory if it does not exist
+mkdir -p output
 
 # WEBM Conversion
-ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libvpx -b:v $BITRATE -crf 10 -an -pass 1 -f webm /dev/null
-ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libvpx -b:v $BITRATE -crf 10 -an -pass 2 "./output/$FILE_NAME.webm"
+ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libvpx -b:v $BITRATE -crf 20 -an -pass 1 -f webm /dev/null
+ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libvpx -b:v $BITRATE -crf 20 -an -pass 2 "./output/$FILE_NAME.webm"
 
 # MP4 Conversion
 ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libx264 -b:v $BITRATE -an "./output/$FILE_NAME.mp4"
