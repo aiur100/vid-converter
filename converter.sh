@@ -37,11 +37,15 @@ echo "$BITRATE is the bit rate"
 # Create output directory if it does not exist
 mkdir -p output
 
-# WEBM Conversion
+# Take a screenshot of the first frame and save as PNG
+ffmpeg -y -ss $START_TIME -i $INPUT_FILE -frames:v 1 "./output/$FILE_NAME.png"
+ffmpeg -y -ss $START_TIME -i $INPUT_FILE -frames:v 1 "./output/$FILE_NAME.jpg"
+
+# WebM Conversion
 ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libvpx -b:v $BITRATE -crf 20 -an -pass 1 -f webm /dev/null
 ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libvpx -b:v $BITRATE -crf 20 -an -pass 2 "./output/$FILE_NAME.webm"
 
 # MP4 Conversion
 ffmpeg -y -ss $START_TIME $END_TIME_OPTION -i $INPUT_FILE -vf "setpts=$NEW_SPEED*PTS" -c:v libx264 -b:v $BITRATE -an "./output/$FILE_NAME.mp4"
 
-echo "Video conversion completed. Output saved as output_$INPUT_FILE.webm and output_$INPUT_FILE.mp4"
+echo "Video conversion completed. Output saved as output/$FILE_NAME.mp4, output/$FILE_NAME.webm, and output/$FILE_NAME.png"
